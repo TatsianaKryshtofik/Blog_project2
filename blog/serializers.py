@@ -64,4 +64,9 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         return instance
 
 
+class UserInfoSerializer(serializers.ModelSerializer):
 
+    class Meta:
+        model = UserInfo
+        fields = '__all__'
+        read_only_fields = ['user', 'created_at', 'updated_at']
