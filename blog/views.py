@@ -84,12 +84,7 @@ class UserUpdateAPIView(RetrieveUpdateAPIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class UserInfoApiView(APIView):
-    permission_classes = (IsAuthenticated,)
-    serializer_class = UserInfoSerializer
-
-
-class AddUserInfoApiView(ModelViewSet):
+class AddUserInfoAPIView(ModelViewSet):
     permission_classes = (IsAuthenticated,)
     serializer_class = UserInfoSerializer
 
