@@ -82,3 +82,19 @@ class UserUpdateAPIView(RetrieveUpdateAPIView):
     def retrieve(self, request, *args, **kwargs):
         serializer = self.serializer_class(request.user)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class UserInfoApiView(APIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = UserInfoSerializer
+
+
+class AddUserInfoApiView(ModelViewSet):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = UserInfoSerializer
+
+    def get_queryset(self):
+        return UserInfo.objects.filter(user=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
