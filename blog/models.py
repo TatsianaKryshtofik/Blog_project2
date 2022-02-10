@@ -1,13 +1,10 @@
-import datetime
-
-import jwt
 from django.conf import settings
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from .managers import UserManager
 
 
-class User(AbstractBaseUser):
+class User(AbstractBaseUser, PermissionsMixin):
 
     email = models.EmailField('email', unique=True, null=False, blank=False)
     username = models.CharField('username',  max_length=50, unique=True, null=False, blank=False)
@@ -18,8 +15,10 @@ class User(AbstractBaseUser):
     date_joined = models.DateTimeField('registered', auto_now_add=True)
     is_active = models.BooleanField('is_active', default=True)
     avatar = models.ForeignKey('Image', on_delete=models.CASCADE, null=True, blank=True)
+    is_staff = models.BooleanField(default=False)
 
     objects = UserManager()
+
 
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['email', 'password']
@@ -34,7 +33,8 @@ class User(AbstractBaseUser):
 
 
 class UserInfo(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, primary_key=True)
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, primary_key=True)
     country = models.CharField('country', max_length=50)
     city = models.CharField('city', max_length=50)
     address = models.CharField('address', max_length=50, null=True, blank=True)
@@ -48,12 +48,12 @@ class UserInfo(models.Model):
 
 class Post(models.Model):
 
-    user = models.ForeignKey(User, verbose_name='author', related_name='posts',
-                             on_delete=models.CASCADE)
-    category = models.ForeignKey('category', on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name='author',
+                             related_name='posts', on_delete=models.CASCADE)
+    category = models.ForeignKey('category', on_delete=models.CASCADE, related_name='posts')
     subcategory = models.ForeignKey('subcategory', on_delete=models.CharField)
     title = models.CharField('title', max_length=50)
-    description = models.TextField('description', blank=True)
+    description = models.TextField('description')
     tags = models.ManyToManyField('Tag', blank=True, related_name='posts')
     created_at = models.DateTimeField('created_at', auto_now_add=True)
     updated_at = models.DateTimeField('updated_at', auto_now=True)
@@ -84,6 +84,7 @@ class Category(models.Model):
 
 
 class Subcategory(models.Model):
+
     title = models.CharField('title', max_length=50)
     created_at = models.DateTimeField('created_at', auto_now_add=True)
 
@@ -110,8 +111,8 @@ class Tag(models.Model):
 
 class Comment(models.Model):
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
     description = models.TextField('comment', blank=True)
     created_at = models.DateTimeField('created_at', auto_now_add=True)
     updated_at = models.DateTimeField('update_at', auto_now=True)
