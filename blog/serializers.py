@@ -64,9 +64,73 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         return instance
 
 
+class UserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ('id', 'username',)
+
+
 class UserInfoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserInfo
         fields = '__all__'
         read_only_fields = ['user', 'created_at', 'updated_at']
+
+
+class PostListSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Post
+        # fields = '__all__'
+        exclude = ('description',)
+
+
+class CategorySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Category
+        fields = '__all__'
+        # exclude = ('subtitle', )
+
+class SubcategorySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Subcategory
+        fields = '__all__'
+
+
+class TagSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Tag
+        fields = '__all__'
+
+
+class CommentSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Comment
+        exclude = ('create_at', 'updated_at', 'deleted_at')
+
+
+class PostDetailSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
+    category = CategorySerializer()
+    subcategory = SubcategorySerializer()
+    # title = serializers.SlugRelatedField(slug_field='name', read_only=True)
+    tags = TagSerializer(many=True)
+    comments = CommentSerializer(many=True)
+
+    class Meta:
+        model = Post
+        exclude = ('image', )
+
+
+class PostSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+
+    class Meta:
+        model = Post
+        exclude = ('image',)
