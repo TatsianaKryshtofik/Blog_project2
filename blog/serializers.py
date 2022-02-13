@@ -83,7 +83,6 @@ class PostListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        # fields = '__all__'
         exclude = ('description',)
 
 
@@ -92,7 +91,7 @@ class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = '__all__'
-        # exclude = ('subtitle', )
+
 
 class SubcategorySerializer(serializers.ModelSerializer):
 
@@ -119,7 +118,6 @@ class PostDetailSerializer(serializers.ModelSerializer):
     user = UserSerializer()
     category = CategorySerializer()
     subcategory = SubcategorySerializer()
-    # title = serializers.SlugRelatedField(slug_field='name', read_only=True)
     tags = TagSerializer(many=True)
     comments = CommentSerializer(many=True)
 
