@@ -4,12 +4,13 @@ from django.contrib.auth import user_logged_in
 from rest_framework import status
 
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
-from rest_framework.generics import RetrieveUpdateAPIView
+from rest_framework.generics import RetrieveUpdateAPIView, ListAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_jwt.utils import jwt_payload_handler
 
+from .classes import MixedSerializer, MixedPermission
 from .serializers import *
 
 from django.contrib.auth import authenticate
@@ -90,6 +91,60 @@ class AddUserInfoAPIView(ModelViewSet):
 
     def get_queryset(self):
         return UserInfo.objects.filter(user=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+
+# class AddPostAPIView(APIView):
+#     permission_classes = (IsAuthenticated,)
+#     serializer_class = PostSerializer
+#
+#     def post(self, request):
+#         pass
+
+
+# class PostAPIView(ReadOnlyModelViewSet):
+#     permission_classes = (AllowAny,)
+#
+#     queryset = Post.objects.all()
+#
+#     def get_serializer_class(self):
+#         if self.action == 'list':
+#             return PostListSerializer
+#         elif self.action == 'retrieve':
+#             return PostDetailSerializer
+
+
+#
+#     def get_queryset(self):
+#         return Post.objects.all(many=True)
+#
+# class PostListAPIView(ListAPIView):
+#     permission_classes = (AllowAny,)
+#     serializer_class = PostSerializer
+#     queryset = Post.objects.all()
+
+
+class PostAPIView(MixedSerializer, MixedPermission, ModelViewSet):
+    permission_classes = (AllowAny,)
+    serializer_class = PostListSerializer
+    serializer_classes_by_action = {
+        "create": PostSerializer,
+        "update": PostSerializer,
+        "retrieve": PostDetailSerializer
+    }
+
+    permission_classes_by_action = {
+        "create": (IsAuthenticated,),
+        "update": (IsAuthenticated,),
+    }
+
+    def get_queryset(self):
+        if self.action == 'update':
+            return Post.objects.filter(user=self.request.user)
+        else:
+            return Post.objects.all()
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
