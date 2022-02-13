@@ -96,36 +96,6 @@ class AddUserInfoAPIView(ModelViewSet):
         serializer.save(user=self.request.user)
 
 
-# class AddPostAPIView(APIView):
-#     permission_classes = (IsAuthenticated,)
-#     serializer_class = PostSerializer
-#
-#     def post(self, request):
-#         pass
-
-
-# class PostAPIView(ReadOnlyModelViewSet):
-#     permission_classes = (AllowAny,)
-#
-#     queryset = Post.objects.all()
-#
-#     def get_serializer_class(self):
-#         if self.action == 'list':
-#             return PostListSerializer
-#         elif self.action == 'retrieve':
-#             return PostDetailSerializer
-
-
-#
-#     def get_queryset(self):
-#         return Post.objects.all(many=True)
-#
-# class PostListAPIView(ListAPIView):
-#     permission_classes = (AllowAny,)
-#     serializer_class = PostSerializer
-#     queryset = Post.objects.all()
-
-
 class PostAPIView(MixedSerializer, MixedPermission, ModelViewSet):
     permission_classes = (AllowAny,)
     serializer_class = PostListSerializer
