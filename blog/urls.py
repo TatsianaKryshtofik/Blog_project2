@@ -13,5 +13,5 @@ urlpatterns = [
     path('userinfo/<int:pk>/', AddUserInfoAPIView.as_view({'put': 'update', 'get': 'retrieve'})),
     path('post/', PostAPIView.as_view({'post': 'create', 'get': 'list'})),
     path('post/<int:pk>/', PostAPIView.as_view({'put': 'update', 'get': 'retrieve'})),
-
+    path('tag/', TagListAPIView.as_view()),
 ]

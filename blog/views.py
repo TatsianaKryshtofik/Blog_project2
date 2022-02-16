@@ -1,7 +1,7 @@
 import jwt
 
 from django.contrib.auth import user_logged_in
-from rest_framework import status
+from rest_framework import status, generics
 
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 from rest_framework.generics import RetrieveUpdateAPIView, ListAPIView
@@ -118,3 +118,8 @@ class PostAPIView(MixedSerializer, MixedPermission, ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+
+
+class TagListAPIView(generics.ListAPIView):
+    queryset = Tag.objects.all()
+    serializer_class = TagSerializer
