@@ -5,12 +5,13 @@ from rest_framework import status
 
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 from rest_framework.generics import RetrieveUpdateAPIView, ListAPIView
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_jwt.utils import jwt_payload_handler
 
 from .classes import MixedSerializer, MixedPermission
+from .permissions import IsAuthor
 from .serializers import *
 
 from django.contrib.auth import authenticate
@@ -115,6 +116,31 @@ class PostAPIView(MixedSerializer, MixedPermission, ModelViewSet):
             return Post.objects.filter(user=self.request.user)
         else:
             return Post.objects.all()
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+
+class CommentAPIView(MixedSerializer, MixedPermission, ModelViewSet):
+    permission_classes = (AllowAny,)
+    serializer_class = CommentSerializer
+    serializer_classes_by_action = {
+        "create": CommentSerializer,
+        "update": CommentSerializer,
+        "retrieve": CommentSerializer
+    }
+
+    permission_classes_by_action = {
+        "create": (IsAuthenticated,),
+        "update": (IsAuthor, IsAdminUser),
+        "delete": (IsAuthor, IsAdminUser),
+    }
+
+    def get_queryset(self):
+        if self.action == 'update':
+            return Comment.objects.filter(user=self.request.user)
+        else:
+            return Comment.objects.all()
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
