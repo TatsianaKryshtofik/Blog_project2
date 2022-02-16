@@ -118,3 +118,20 @@ class PostAPIView(MixedSerializer, MixedPermission, ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+
+
+class RatingAPIView(APIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = CreatePostRatingSerializer
+
+
+    def post(self, request):
+        if not PostRating.objects.filter(user=request.user, post=request.data["post"]).exists():
+            serializer = CreatePostRatingSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save(user=request.user)
+                return Response(status=201)
+            else:
+                return Response(status=400)
+        else:
+            return Response(status=400)
