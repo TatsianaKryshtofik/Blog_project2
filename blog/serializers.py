@@ -132,3 +132,10 @@ class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         exclude = ('image',)
+
+
+class SubcategoryListSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Subcategory
+        exclude = ('created_at',)
