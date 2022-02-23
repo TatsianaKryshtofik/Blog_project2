@@ -14,5 +14,6 @@ urlpatterns = [
     path('post/', PostAPIView.as_view({'post': 'create', 'get': 'list'})),
     path('post/<int:pk>/', PostAPIView.as_view({'put': 'update', 'get': 'retrieve'})),
     path('rating/', RatingAPIView.as_view()),
-
+    path('category/', CategoryListView.as_view()),
+    path('subcategory/', SubcategoryListAPIView.as_view()),
 ]

@@ -1,7 +1,7 @@
 import jwt
 
 from django.contrib.auth import user_logged_in
-from rest_framework import status
+from rest_framework import status, generics
 
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 from rest_framework.generics import RetrieveUpdateAPIView, ListAPIView
@@ -135,3 +135,13 @@ class RatingAPIView(APIView):
                 return Response(status=400)
         else:
             return Response(status=400)
+          
+          
+class CategoryListView(generics.ListAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategoryListSerializer
+    
+    
+class SubcategoryListAPIView(generics.ListAPIView):
+    queryset = Subcategory.objects.all()
+    serializer_class = SubcategoryListSerializer

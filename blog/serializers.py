@@ -147,3 +147,17 @@ class CreatePostRatingSerializer(serializers.ModelSerializer):
             defaults={'choice': validated_data.get('choice')}
         )
         return rating
+
+      
+class CategoryListSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Category
+        exclude = ('description', 'subtitle', 'created_at')
+
+        
+class SubcategoryListSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Subcategory
+        exclude = ('created_at',)
