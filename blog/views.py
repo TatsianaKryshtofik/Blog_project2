@@ -120,6 +120,11 @@ class PostAPIView(MixedSerializer, MixedPermission, ModelViewSet):
         serializer.save(user=self.request.user)
 
 
+class CategoryListView(generics.ListAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategoryListSerializer
+    
+    
 class SubcategoryListAPIView(generics.ListAPIView):
     queryset = Subcategory.objects.all()
     serializer_class = SubcategoryListSerializer
