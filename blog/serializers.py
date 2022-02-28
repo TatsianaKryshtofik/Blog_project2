@@ -111,7 +111,7 @@ class CommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Comment
-        exclude = ('create_at', 'updated_at', 'deleted_at')
+        exclude = ('created_at', 'updated_at', 'deleted_at')
 
 
 class PostDetailSerializer(serializers.ModelSerializer):
@@ -123,7 +123,7 @@ class PostDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        exclude = ('image', )
+        fields = '__all__'
 
 
 class PostSerializer(serializers.ModelSerializer):
@@ -131,4 +131,4 @@ class PostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        exclude = ('image',)
+        fields = '__all__'
