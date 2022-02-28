@@ -111,7 +111,7 @@ class CommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Comment
-        exclude = ('create_at', 'updated_at', 'deleted_at')
+        exclude = ('created_at', 'updated_at', 'deleted_at')
 
 
 class PostDetailSerializer(serializers.ModelSerializer):
