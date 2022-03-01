@@ -148,14 +148,14 @@ class CreatePostRatingSerializer(serializers.ModelSerializer):
         )
         return rating
 
-      
+
 class CategoryListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Category
         exclude = ('description', 'subtitle', 'created_at')
 
-        
+
 class SubcategoryListSerializer(serializers.ModelSerializer):
 
     class Meta:
