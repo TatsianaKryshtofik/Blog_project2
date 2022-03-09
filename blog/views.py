@@ -119,6 +119,9 @@ class PostAPIView(MixedSerializer, MixedPermission, ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
+class TagListAPIView(generics.ListAPIView):
+    queryset = Tag.objects.all()
+    serializer_class = TagSerializer
 
 class CategoryListView(generics.ListAPIView):
     queryset = Category.objects.all()
