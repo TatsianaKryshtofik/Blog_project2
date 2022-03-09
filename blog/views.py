@@ -51,7 +51,7 @@ class LoginAPIView(APIView):
                     payload = jwt_payload_handler(user)
                     token = jwt.encode(payload, settings.SECRET_KEY)
                     user_details = {}
-                    user_details['surname'] = user.username
+                    user_details['username'] = user.username
                     user_details['email'] = user.email
                     user_details['token'] = token
                     user_logged_in.send(sender=user.__class__,
