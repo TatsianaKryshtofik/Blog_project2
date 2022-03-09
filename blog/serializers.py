@@ -134,7 +134,7 @@ class PostSerializer(serializers.ModelSerializer):
         exclude = ('image',)
 
 
-class CreatePostRatingSerializer(serializers.ModelSerializer):
+class CreateMyRatingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MyRating
