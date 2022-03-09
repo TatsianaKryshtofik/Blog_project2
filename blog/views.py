@@ -51,7 +51,7 @@ class LoginAPIView(APIView):
                     payload = jwt_payload_handler(user)
                     token = jwt.encode(payload, settings.SECRET_KEY)
                     user_details = {}
-                    user_details['surname'] = user.username
+                    user_details['username'] = user.username
                     user_details['email'] = user.email
                     user_details['token'] = token
                     user_logged_in.send(sender=user.__class__,
@@ -119,7 +119,15 @@ class PostAPIView(MixedSerializer, MixedPermission, ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
-
 class TagListAPIView(generics.ListAPIView):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
+
+class CategoryListView(generics.ListAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategoryListSerializer
+    
+    
+class SubcategoryListAPIView(generics.ListAPIView):
+    queryset = Subcategory.objects.all()
+    serializer_class = SubcategoryListSerializer
