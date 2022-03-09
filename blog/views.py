@@ -51,7 +51,7 @@ class LoginAPIView(APIView):
                     payload = jwt_payload_handler(user)
                     token = jwt.encode(payload, settings.SECRET_KEY)
                     user_details = {}
-                    user_details['surname'] = user.username
+                    user_details['username'] = user.username
                     user_details['email'] = user.email
                     user_details['token'] = token
                     user_logged_in.send(sender=user.__class__,
@@ -119,6 +119,11 @@ class PostAPIView(MixedSerializer, MixedPermission, ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
+    def get_middle_value(self):
+        return Post.objects.all().annotate(
+            middle_value=models.Sum(models.F('value')) / models.Count(models.F('value'))
+        )
+
 
 class RatingAPIView(APIView):
     permission_classes = (IsAuthenticated,)
@@ -126,7 +131,7 @@ class RatingAPIView(APIView):
 
 
     def post(self, request):
-        if not PostRating.objects.filter(user=request.user, post=request.data["post"]).exists():
+        if not MyRating.objects.filter(user=request.user, post=request.data["post"]).exists():
             serializer = CreatePostRatingSerializer(data=request.data)
             if serializer.is_valid():
                 serializer.save(user=request.user)
@@ -135,13 +140,13 @@ class RatingAPIView(APIView):
                 return Response(status=400)
         else:
             return Response(status=400)
-          
-          
+
+
 class CategoryListView(generics.ListAPIView):
     queryset = Category.objects.all()
     serializer_class = CategoryListSerializer
-    
-    
+
+
 class SubcategoryListAPIView(generics.ListAPIView):
     queryset = Subcategory.objects.all()
     serializer_class = SubcategoryListSerializer

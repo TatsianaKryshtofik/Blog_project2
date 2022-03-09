@@ -137,11 +137,11 @@ class PostSerializer(serializers.ModelSerializer):
 class CreatePostRatingSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = PostRating
+        model = MyRating
         fields = ('post', 'value')
 
     def create(self, validated_data):
-        rating = PostRating.objects.update_or_create(
+        rating = MyRating.objects.update_or_create(
             user=validated_data.get('user', None),
             post=validated_data.get('post', None),
             defaults={'choice': validated_data.get('choice')}

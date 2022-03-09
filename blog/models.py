@@ -123,27 +123,12 @@ class Comment(models.Model):
         verbose_name_plural = 'comments'
 
 
-class PostRating(models.Model):
-
-    Value = (
-        (1, 'very bad'),
-        (2, 'bad'),
-        (3, 'good'),
-        (4, 'very good'),
-        (5, 'the best'),
-    )
-    value = models.SmallIntegerField('value', choices=Value)
-    created_at = models.DateTimeField('created_at', auto_now_add=True)
-    updated_at = models.DateTimeField('updated_at', auto_now=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.value
-
-    class Meta:
-        verbose_name = 'rating'
-        verbose_name_plural = 'ratings'
+    # def __str__(self):
+    #     return self.value
+    #
+    # class Meta:
+    #     verbose_name = 'rating'
+    #     verbose_name_plural = 'ratings'
 
 
 class Image(models.Model):
@@ -156,3 +141,21 @@ class Image(models.Model):
     class Meta:
         verbose_name = 'image'
         verbose_name_plural = 'images'
+
+
+class MyRating(models.Model):
+    Value = (
+        (1, 1),
+        (2, 2),
+        (3, 3),
+        (4, 4),
+        (5, 5),
+    )
+    value = models.SmallIntegerField('value', choices=Value)
+    created_at = models.DateTimeField('created_at', auto_now_add=True)
+    updated_at = models.DateTimeField('updated_at', auto_now=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.value}'
