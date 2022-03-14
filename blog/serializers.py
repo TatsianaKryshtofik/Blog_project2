@@ -134,11 +134,27 @@ class PostSerializer(serializers.ModelSerializer):
         exclude = ('image',)
 
 
+class CreateMyRatingSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = MyRating
+        fields = ('post', 'value')
+
+    def create(self, validated_data):
+        rating = MyRating.objects.update_or_create(
+            user=validated_data.get('user', None),
+            post=validated_data.get('post', None),
+            defaults={'choice': validated_data.get('choice')}
+        )
+        return rating
+
+
 class CategoryListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Category
         exclude = ('description', 'subtitle', 'created_at')
+
 
 class SubcategoryListSerializer(serializers.ModelSerializer):
 

@@ -119,12 +119,34 @@ class PostAPIView(MixedSerializer, MixedPermission, ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
+    def get_middle_value(self):
+        return Post.objects.all().annotate(
+            middle_value=models.Sum(models.F('value')) / models.Count(models.F('value'))
+        )
+
+
+class RatingAPIView(APIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = CreateMyRatingSerializer
+
+
+    def post(self, request):
+        if not MyRating.objects.filter(user=request.user, post=request.data["post"]).exists():
+            serializer = CreateMyRatingSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save(user=request.user)
+                return Response(status=201)
+            else:
+                return Response(status=400)
+        else:
+            return Response(status=400)
+
 
 class CategoryListView(generics.ListAPIView):
     queryset = Category.objects.all()
     serializer_class = CategoryListSerializer
-    
-    
+
+
 class SubcategoryListAPIView(generics.ListAPIView):
     queryset = Subcategory.objects.all()
     serializer_class = SubcategoryListSerializer
