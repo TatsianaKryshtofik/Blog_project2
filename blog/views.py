@@ -14,6 +14,7 @@ from .classes import MixedSerializer, MixedPermission
 from .serializers import *
 
 from django.contrib.auth import authenticate
+from .mypaginations import MyPostNumberPagination
 
 
 class RegistrationAPIView(APIView):
@@ -97,6 +98,7 @@ class AddUserInfoAPIView(ModelViewSet):
 
 
 class PostAPIView(MixedSerializer, MixedPermission, ModelViewSet):
+    pagination_class = MyPostNumberPagination
     permission_classes = (AllowAny,)
     serializer_class = PostListSerializer
     serializer_classes_by_action = {
@@ -109,6 +111,7 @@ class PostAPIView(MixedSerializer, MixedPermission, ModelViewSet):
         "create": (IsAuthenticated,),
         "update": (IsAuthenticated,),
     }
+
 
     def get_queryset(self):
         if self.action == 'update':
